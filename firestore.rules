@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net: default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidUserProgress(data) {
+      return data.keys().hasAll(['userId', 'totalStars', 'completedLevels', 'unlockedLevels']) &&
+        data.userId is string &&
+        data.userId.size() <= 128 &&
+        data.userId == request.auth.uid &&
+        data.totalStars is number &&
+        data.totalStars >= 0 &&
+        data.completedLevels is list &&
+        data.completedLevels.size() <= 100 &&
+        data.unlockedLevels is list &&
+        data.unlockedLevels.size() <= 100;
+    }
+
+    match /user_progress/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+      allow create: if isSignedIn() && isValidId(userId) && request.auth.uid == userId && isValidUserProgress(request.resource.data);
+      allow update: if isSignedIn() && isValidId(userId) && request.auth.uid == userId && isValidUserProgress(request.resource.data);
+      allow delete: if false;
+    }
+  }
+}

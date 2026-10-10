@@ -1,0 +1,40 @@
+{
+  "entities": {
+    "UserProgress": {
+      "title": "UserProgress",
+      "description": "Game progress and preferences for a player",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Unique user ID of the player",
+          "maxLength": 128
+        },
+        "totalStars": {
+          "type": "number",
+          "description": "Total stars earned by the player"
+        },
+        "completedLevels": {
+          "type": "array",
+          "description": "List of level identifiers completed by player"
+        },
+        "unlockedLevels": {
+          "type": "array",
+          "description": "List of level identifiers unlocked"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Server timestamp or ISO update string",
+          "maxLength": 64
+        }
+      },
+      "required": ["userId", "totalStars", "completedLevels", "unlockedLevels"]
+    }
+  },
+  "firestore": {
+    "/user_progress/{userId}": {
+      "schema": "UserProgress",
+      "description": "Player game progress collection keyed by player auth UID"
+    }
+  }
+}

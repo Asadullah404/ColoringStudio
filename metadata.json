@@ -1,0 +1,6 @@
+{
+  "name": "ColorZen ASMR - Relaxing Art Coloring Game",
+  "description": "Relax and color adorable illustrations in ColorZen ASMR. Enjoy satisfying taps, soothing ASMR marker sounds, vibrant palettes, level progression, and cloud-saved achievements.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
